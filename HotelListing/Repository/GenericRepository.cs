@@ -1,4 +1,6 @@
-﻿using HotelListing.IRepository;
+﻿using HotelListing.Data;
+using HotelListing.IRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,39 +11,78 @@ namespace HotelListing.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        public Task Delete(int Id)
+        private readonly DatabaseContext _context;
+        private readonly DbSet<T> _db;
+
+        public GenericRepository(DatabaseContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _db = _context.Set<T>();
+        }
+
+        public async Task Delete(int id)
+        {
+            var entity = await _db.FindAsync(id);
+            _db.Remove(entity);
         }
     
         public void DeleteRange(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            _db.RemoveRange(entities);
         }
 
-        public Task<T> Get(System.Linq.Expressions.Expression<Func<T, bool>> expression, List<string> includes = null)
+        public async Task<T> Get(System.Linq.Expressions.Expression<Func<T, bool>> expression, List<string> includes = null)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = _db;
+            if (includes != null)
+            {
+                foreach (var includePropery in includes)
+                {
+                    query = query.Include(includePropery);
+                }
+            }
+            return await query.AsNoTracking().FirstOrDefaultAsync(expression);
         }
 
-        public Task<IList<T>> GetAll(System.Linq.Expressions.Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, List<string> includes = null)
+        public async Task<IList<T>> GetAll(System.Linq.Expressions.Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, List<string> includes = null)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = _db;
+
+            if (expression != null)
+            {
+                query = query.Where(expression);
+            }
+
+            if (includes != null)
+            {
+                foreach (var includePropery in includes)
+                {
+                    query = query.Include(includePropery);
+                }
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            return await query.AsNoTracking().ToListAsync();
         }
 
-        public Task Insert(T entity)
+        public async Task Insert(T entity)
         {
-            throw new NotImplementedException();
+            await _db.AddAsync(entity);
         }
 
-        public Task InsertRange(IEnumerable<T> entities)
+        public async Task InsertRange(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            await _db.AddRangeAsync(entities);
         }
 
         public void Update(T entity)
         {
-            throw new NotImplementedException();
+            _db.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }
