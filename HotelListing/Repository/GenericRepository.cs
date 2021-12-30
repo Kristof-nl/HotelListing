@@ -11,6 +11,7 @@ namespace HotelListing.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
+
         private readonly DatabaseContext _context;
         private readonly DbSet<T> _db;
 
@@ -25,64 +26,35 @@ namespace HotelListing.Repository
             var entity = await _db.FindAsync(id);
             _db.Remove(entity);
         }
-    
+
         public void DeleteRange(IEnumerable<T> entities)
         {
-            _db.RemoveRange(entities);
+            throw new NotImplementedException();
         }
 
-        public async Task<T> Get(System.Linq.Expressions.Expression<Func<T, bool>> expression, List<string> includes = null)
+        public Task<T> Get(Expression<Func<T, bool>> expression, List<string> includes = null)
         {
-            IQueryable<T> query = _db;
-            if (includes != null)
-            {
-                foreach (var includePropery in includes)
-                {
-                    query = query.Include(includePropery);
-                }
-            }
-            return await query.AsNoTracking().FirstOrDefaultAsync(expression);
+            throw new NotImplementedException();
         }
 
-        public async Task<IList<T>> GetAll(System.Linq.Expressions.Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, List<string> includes = null)
+        public Task<IList<T>> GetAll(Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, List<string> includes = null)
         {
-            IQueryable<T> query = _db;
-
-            if (expression != null)
-            {
-                query = query.Where(expression);
-            }
-
-            if (includes != null)
-            {
-                foreach (var includePropery in includes)
-                {
-                    query = query.Include(includePropery);
-                }
-            }
-
-            if (orderBy != null)
-            {
-                query = orderBy(query);
-            }
-
-            return await query.AsNoTracking().ToListAsync();
+            throw new NotImplementedException();
         }
 
-        public async Task Insert(T entity)
+        public Task Insert(T entity)
         {
-            await _db.AddAsync(entity);
+            throw new NotImplementedException();
         }
 
-        public async Task InsertRange(IEnumerable<T> entities)
+        public Task InsertRange(IEnumerable<T> entities)
         {
-            await _db.AddRangeAsync(entities);
+            throw new NotImplementedException();
         }
 
         public void Update(T entity)
         {
-            _db.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            throw new NotImplementedException();
         }
     }
 }
