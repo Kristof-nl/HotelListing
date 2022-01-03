@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft;
+using Microsoft.AspNetCore.Identity;
 
 namespace HotelListing
 {
@@ -44,6 +45,10 @@ namespace HotelListing
                 .AllowAnyMethod()
                 .AllowAnyHeader());
             });
+
+            //Identity and authentication
+            services.AddAuthentication();
+            services.ConfigureIdentity();
 
             //Add UnitOfWork
             services.AddTransient<IUnitOfWork, UnitOfWork>();
