@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft;
 using Microsoft.AspNetCore.Identity;
+using HotelListing.Services;
 
 namespace HotelListing
 {
@@ -52,6 +53,9 @@ namespace HotelListing
 
             //Add UnitOfWork
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            //AddAuthManager
+            services.AddScoped<IAuthManager, AuthManager>();
 
             //Add AutoMapper
             services.AddAutoMapper(typeof(MapperInitializer));
