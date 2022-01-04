@@ -13,7 +13,7 @@ namespace HotelListing
     {
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            var builder = services.AddIdentityCore<ApiUser>(q => q.User.RequireUniqueEmail = true);
+            var builder = services.AddIdentityCore<ApiUser>(q => { q.User.RequireUniqueEmail = true; });
 
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
             builder.AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
@@ -34,13 +34,13 @@ namespace HotelListing
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtSettings.GetSection("Issuer").Value,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                 };
             });
-
         }
     }
 }
