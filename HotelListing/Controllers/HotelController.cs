@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using HotelListing.Data;
 using HotelListing.IRepository;
 using HotelListing.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -43,6 +45,7 @@ namespace HotelListing.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -50,7 +53,7 @@ namespace HotelListing.Controllers
         {
             try
             {
-                var hotel = await _unitOfWork.Hotels.Get(q => q.Id == id, new List<string> { "Country"} );
+                var hotel = await _unitOfWork.Hotels.Get(q => q.Id == id, new List<string> { "Country" });
                 var result = _mapper.Map<HotelDto>(hotel);
                 return Ok(result);
             }
@@ -60,5 +63,35 @@ namespace HotelListing.Controllers
                 return StatusCode(500, "Internal Server Error");
             }
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateHotel([FromBody] CreateHotelDto hotelDto)
+        {
+            if(!ModelState.IsValid)
+            {
+                _logger.LogError($"Invalid POST attempt in {nameof(CreateHotel)}");
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var hotel = _mapper.Map<Hotel>(hotelDto);
+                await _unitOfWork.Hotels.Insert(hotel);
+                await _unitOfWork.Save();
+
+                return CreatedAtRoute("GetHotel", new { id = hotel.Id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong in the {nameof(CreateHotel)}");
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
+
+
+
     }
 }
