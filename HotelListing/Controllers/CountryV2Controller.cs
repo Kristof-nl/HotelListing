@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace HotelListing.Controllers
 {
     [ApiVersion("2.0")]
-    [Route("api/[controller]")]
+    [Route("api/{v:apiversion}/country")]
     [ApiController]
     public class CountryV2Controller : ControllerBase
     {
@@ -31,5 +31,5 @@ namespace HotelListing.Controllers
             return Ok(_context.Countries);
         }
     }
-}
+
 }

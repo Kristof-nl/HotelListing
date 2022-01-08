@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Newtonsoft;
 using Microsoft.AspNetCore.Identity;
 using HotelListing.Services;
+using AspNetCoreRateLimit;
 
 namespace HotelListing
 {
@@ -47,6 +48,16 @@ namespace HotelListing
                 .AllowAnyHeader());
             });
 
+            //Rate Limiting
+            services.AddMemoryCache();
+
+            services.ConfigureRateLimiting();
+            services.AddHttpContextAccessor();
+
+            //Caching
+            services.AddResponseCaching();
+            services.AddHttpCacheHeaders();
+
             //Identity and authentication
             services.AddAuthentication();
             services.ConfigureIdentity();
@@ -64,7 +75,12 @@ namespace HotelListing
             AddSwaggerDoc(services);
 
 
-            services.AddControllers().AddNewtonsoftJson(op =>
+            services.AddControllers(config => {
+                config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
+                {
+                    Duration = 120
+                });
+            }).AddNewtonsoftJson(op =>
             op.SerializerSettings.ReferenceLoopHandling =
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -122,6 +138,11 @@ namespace HotelListing
             app.UseHttpsRedirection();
 
             app.UseCors("AllowAll");
+
+            app.UseResponseCaching();
+            app.UseHttpCacheHeaders();
+
+            //app.UseIpRateLimiting();
 
             app.UseRouting();
 

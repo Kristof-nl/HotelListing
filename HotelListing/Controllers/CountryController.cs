@@ -4,6 +4,7 @@ using HotelListing.IRepository;
 using HotelListing.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace HotelListing.Controllers
         {
             try
             {
-                var country = await _unitOfWork.Countries.Get(q => q.Id == id, new List<string> { "Hotels" });
+                var country = await _unitOfWork.Countries.Get(q => q.Id == id, include: q => q.Include(x => x.Hotels));
                 var result = _mapper.Map<CountryDto>(country);
                 return Ok(result);
             }
