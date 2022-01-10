@@ -1,6 +1,7 @@
-﻿using AspNetCoreRateLimit;
+﻿
+using AspNetCoreRateLimit;
+using HotelListing.Core.Models;
 using HotelListing.Data;
-using HotelListing.Models;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -17,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HotelListing
+namespace HotelListing.Core
 {
     public static class ServiceExtensions
     {

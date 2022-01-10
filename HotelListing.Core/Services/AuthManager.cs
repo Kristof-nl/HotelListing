@@ -1,5 +1,6 @@
-﻿using HotelListing.Data;
-using HotelListing.Models;
+﻿using HotelListing.Core.DTOs;
+using HotelListing.Data;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -10,7 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HotelListing.Services
+namespace HotelListing.Core.Services
 {
     public class AuthManager : IAuthManager
     {

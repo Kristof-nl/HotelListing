@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace HotelListing.Models
+namespace HotelListing.Core.DTOs
 {
     public class CreateCountryDto
     {

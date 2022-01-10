@@ -1,7 +1,5 @@
 using HotelListing.Configurations;
 using HotelListing.Data;
-using HotelListing.IRepository;
-using HotelListing.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -18,8 +16,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft;
 using Microsoft.AspNetCore.Identity;
-using HotelListing.Services;
 using AspNetCoreRateLimit;
+using HotelListing.Core;
+using HotelListing.Core.IRepository;
+using HotelListing.Core.Repository;
+using HotelListing.Core.Services;
 
 namespace HotelListing
 {

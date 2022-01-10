@@ -1,4 +1,4 @@
-﻿using HotelListing.Models;
+﻿using HotelListing.Core.Models;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using X.PagedList;
 
-namespace HotelListing.IRepository
+namespace HotelListing.Core.IRepository
 {
     public interface IGenericRepository<T> where T : class
     {
